@@ -69,6 +69,10 @@ function handleOperator(nextOperator) {
     return;
   }
 
+  if (previousValue !== null && !currentInput) {
+    return;
+  }
+
   const inputValue = parseFloat(currentInput || previousValue);
 
   if (previousValue !== null && operator) {
