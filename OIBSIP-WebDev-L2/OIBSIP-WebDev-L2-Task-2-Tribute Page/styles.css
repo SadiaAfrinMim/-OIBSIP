@@ -1,0 +1,157 @@
+:root {
+  --cream: #f7efe7;
+  --rose: #f0d9ca;
+  --ink: #1f2d3d;
+  --accent: #8a3b2f;
+  --accent-dark: #28435c;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--ink);
+  background: linear-gradient(135deg, var(--cream), #fffaf5);
+  line-height: 1.7;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2rem;
+  align-items: center;
+  padding: 3rem 5vw 2.5rem;
+  background: var(--accent-dark);
+  color: white;
+}
+
+.eyebrow,
+.section__label {
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.7rem;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+h1 {
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  margin-bottom: 0.5rem;
+}
+
+.tagline {
+  font-size: 1.05rem;
+  max-width: 34rem;
+}
+
+.hero__image {
+  border-radius: 1rem;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  min-height: 320px;
+  object-fit: cover;
+}
+
+main {
+  padding: 0 5vw 2.5rem;
+}
+
+.section {
+  padding: 2.25rem;
+  margin-top: 1.5rem;
+  border-radius: 1rem;
+}
+
+.biography {
+  background: var(--rose);
+}
+
+.timeline-section {
+  background: #ffffff;
+}
+
+.quote-section {
+  background: var(--accent);
+  color: white;
+  text-align: center;
+}
+
+.section__heading {
+  margin-bottom: 1rem;
+}
+
+.section__heading h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.bio__text p {
+  margin-bottom: 1rem;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.timeline__card {
+  background: var(--cream);
+  padding: 1rem 1.2rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.timeline__card h3 {
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+blockquote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  max-width: 45rem;
+  margin: 0 auto;
+}
+
+cite {
+  display: block;
+  margin-top: 0.8rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem 1rem 2rem;
+  color: var(--accent-dark);
+}
+
+@media (max-width: 780px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 2rem 1.2rem 1.5rem;
+  }
+
+  .section {
+    padding: 1.4rem;
+  }
+
+  .timeline {
+    grid-template-columns: 1fr;
+  }
+}
