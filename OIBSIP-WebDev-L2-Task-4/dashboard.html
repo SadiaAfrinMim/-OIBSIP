@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - OIBSIP</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .dashboard-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .dashboard-header {
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .dashboard-header p {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.8);
+        }
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: rgba(255,255,255,0.08);
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .user-details h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+            color: white;
+        }
+        .user-details p {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.7);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.08);
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            color: white;
+        }
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .stat-card .stat-label {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 0.5rem;
+        }
+        .dashboard-content {
+            background: rgba(255,255,255,0.08);
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        .dashboard-content h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        .dashboard-content p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+        }
+        .logout-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+        .auth-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.9);
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Welcome Back!</h1>
+            <p>You're now logged into your dashboard</p>
+            <span class="auth-badge" id="auth-badge">Authenticated</span>
+        </div>
+
+        <div class="user-card">
+            <div class="user-avatar" id="user-avatar">U</div>
+            <div class="user-details">
+                <h2 id="user-name">Loading...</h2>
+                <p id="user-email">Loading...</p>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="stat-accounts">0</div>
+                <div class="stat-label">Total Accounts</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">24h</div>
+                <div class="stat-label">Session Duration</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">Active</div>
+                <div class="stat-label">Status</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-user-id">-</div>
+                <div class="stat-label">User ID</div>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <h3>Dashboard Overview</h3>
+            <p>This is your protected dashboard area. You can only see this content after successfully logging in. Your session is managed securely using HTTP-only cookies with bcrypt-hashed passwords stored in the backend.</p>
+            <p style="margin-top: 1rem;">If you are seeing this page, your authentication session is active and you have access to protected resources.</p>
+        </div>
+
+        <div class="dashboard-actions">
+            <button class="logout-btn" id="logout-btn">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication and populate user info
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/dashboard', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    const user = data.user;
+                    document.getElementById('user-name').textContent = user.username;
+                    document.getElementById('user-email').textContent = user.email;
+                    document.getElementById('user-avatar').textContent = user.username.charAt(0).toUpperCase();
+                    document.getElementById('stat-user-id').textContent = user.id ? user.id.toString().slice(-6) : '-';
+                } else {
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = '/';
+            }
+        }
+
+        // Load total accounts count
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/dashboard', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('stat-accounts').textContent = data.user ? '1' : '0';
+                }
+            } catch (error) {
+                console.error('Stats load failed:', error);
+            }
+        }
+
+        // Logout handler
+        document.getElementById('logout-btn').addEventListener('click', async function() {
+            try {
+                await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+            window.location.href = '/';
+        });
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadStats();
+        });
+    </script>
+</body>
+</html>
